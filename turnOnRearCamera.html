@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="bootstrap/jquery-3.2.1.min.js"></script>
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"></script>
+		<script src="bootstrap/holder.min.js"></script>
+		
+	</head>
+	
+	<script type="application/javascript">
+		
+		window.onload=function() {
+			
+			let video = document.getElementById("video");
+			
+			// 此API请求可用媒体输入和输出设备的列表，例如麦克风，摄像头，耳机等。
+		    let promoseDevs = navigator.mediaDevices.enumerateDevices();
+		    
+		    var exArray = [];
+		    
+			promoseDevs.then(function(devices) {
+		    	
+		        devices.forEach(function (dv) {
+		            var kind = dv.kind;
+		            
+		            //我们需要的是摄像头，所以匹配video
+		            if (kind.match(/^video.*/)) {
+		            	exArray.push(dv.deviceId);
+		                console.log(dv);
+		            }
+		            
+		        });
+		        
+		    }).then(function(){
+		    
+		   	 	alert("摄像头个数：" + exArray.length);
+		    
+			     //设置启用摄像头时的约束，在手机端约束摄像头为后置
+		        let constraints = {
+		    		video: {
+		    			deviceId: exArray[exArray.length - 1]
+		    		},
+		    		audio : false  
+		        };
+		        
+		        let promise;
+		        if (navigator.mediaDevices.getUserMedia) {
+		    		//最新的标准API
+		        	promise = navigator.mediaDevices.getUserMedia(constraints);
+		        } else if (navigator.webkitGetUserMedia) {
+		    		//webkit核心浏览器
+		        	promise = navigator.webkitGetUserMedia(constraints, success, error)
+		        } else if (navigator.mozGetUserMedia) {
+		    		//firfox浏览器
+		        	promise = navigator.mozGetUserMedia(constraints, success, error);
+		        } else if (navigator.getUserMedia) {
+		    		//旧版API
+		        	promise = navigator.getUserMedia(constraints, success, error);
+		        }
+		        
+		        promise.then(function (MediaStream) {
+		            video.srcObject = MediaStream;
+		            video.play();
+			    })
+		    
+		 	})
+		}
+		
+	</script>
+	
+	<body>
+		
+		<video class="myvideo" style="border-radius: 10%;" id="video" autoplay="autoplay" ></video>
+
+	</body>
+</html>

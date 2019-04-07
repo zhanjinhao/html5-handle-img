@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="bootstrap/jquery-3.2.1.min.js"></script>
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"></script>
+		<script src="bootstrap/holder.min.js"></script>
+		
+	</head>
+	
+	<script type="application/javascript">
+		
+		function select_file(fileid){
+		    document.getElementById(fileid).click();
+		}
+		//预览图片并获得图片的base64编码
+		function imgPreview(fileDom){
+		    //判断是否支持FileReader
+		    /**
+		     * FileReader 对象允许Web应用程序异步读取存储在用户计算机上的文件
+		     */
+		    if (window.FileReader) {
+		        var reader = new FileReader();
+		    } else {
+		        alert("请更新您的浏览器！");
+		        return;
+		    }
+		    //获取文件
+		    var file = fileDom.files[0];
+		    var imageType = /^image\//;
+		    //是否是图片
+		    if (!imageType.test(file.type)) {
+		        alert("请选择图片文件！");
+		        return;
+		    }
+		    /*
+		     * readAsDataURL 方法会读取指定的 Blob 或 File 对象。返回文件的base64编码
+		     */
+		    reader.readAsDataURL(file);
+		    /**
+		     * 当文件读取完成的时候会回调此函数，e就是获取的文件
+		     */
+		    reader.onload = function(e) {
+		        //获取图片dom
+		        var img = document.getElementById("img");
+		        //e是获取的文件，reader.readAsDataURL(file);读取的Base64编码存放在target.result中
+		        img.src = e.target.result;
+		    };
+		}
+		
+	</script>
+	
+	<body>
+		<div class="row">
+			<div class="panel-title" style="text-align: center;">
+				<input type="file" class="hidden" id="image" onchange="imgPreview(this)">
+					<img style="height: 200px; border-radius: 50%;"
+						src="holder.js/300x300" onclick="select_file('image');" id="img" />
+			</div>
+		</div>
+
+	</body>
+</html>

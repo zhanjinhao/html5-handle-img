@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="bootstrap/jquery-3.2.1.min.js"></script>
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"></script>
+		<script src="bootstrap/holder.min.js"></script>
+	</head>
+	
+	<script type="application/javascript">
+
+		window.onload=function() {
+			
+			let video = document.getElementById("video");
+			
+			/**
+			 * constraints：打开摄像头时约束，下面的约束对video没有约束，它选择设备的默认摄像头，但是禁止了音频
+			 */
+		    let constraints = {
+		       video: {},
+		       audio : false
+		    };
+			
+			let promise;
+			if(navigator.mediaDevices.getUserMedia){
+		        //最新标准API
+		        promise = navigator.mediaDevices.getUserMedia(constraints);
+		    } else if (navigator.webkitGetUserMedia){
+		        //webkit内核浏览器
+		        promise = navigator.webkitGetUserMedia(constraints);
+		    } else if (navigator.mozGetUserMedia){
+		        //Firefox浏览器
+		        promise = navagator.mozGetUserMedia(constraints);
+		    } else if (navigator.getUserMedia){
+		        //旧版API
+		        promise = navigator.getUserMedia(constraints);
+		    }
+		    
+			promise.then(function (MediaStream) {
+		        video.srcObject = MediaStream;
+		        video.play();
+		    });
+		}
+		
+	</script>
+	
+	<body>
+		<video class="myvideo" style="border-radius: 10%;" id="video" autoplay="autoplay" ></video>
+	</body>
+</html>
